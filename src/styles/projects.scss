@@ -44,7 +44,7 @@
             }
 
             &:nth-child(even) .project_featured_body {
-                justify-self: stretch;
+                justify-self: start;
             }
         }
     }
@@ -66,15 +66,29 @@
         font-style: italic;
         line-height: 1.05;
         overflow-wrap: anywhere;
+        transition: color 0.25s ease;
+    }
 
-        a {
-            color: inherit;
-            transition: color 0.25s ease;
+    // The text block is the link, sized to its content so the project cursor
+    // only shows over the text, not the empty part of the grid column.
+    .project_featured_body {
+        display: block;
+        justify-self: start;
+        width: fit-content;
+        max-width: 100%;
+        color: inherit;
 
-            &:hover,
-            &:focus-visible {
+        &:hover,
+        &:focus-visible {
+            .project_featured_title {
                 color: var(--ui-accent);
             }
+        }
+
+        &:focus-visible {
+            outline: 2px solid rgba(247, 202, 24, 0.72);
+            outline-offset: 6px;
+            border-radius: 4px;
         }
     }
 
@@ -90,37 +104,6 @@
         margin: 0.7rem 0 0;
         font-size: 0.88rem;
         color: var(--projects-muted);
-    }
-
-    .project_links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem 1.4rem;
-        margin-top: 1.3rem;
-    }
-
-    .project_link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-        font-size: 0.88rem;
-        color: var(--projects-muted);
-        transition: color 0.25s ease;
-
-        svg {
-            width: 0.62rem;
-            height: 0.62rem;
-            transition: transform 0.3s var(--projects-ease);
-        }
-
-        &:hover,
-        &:focus-visible {
-            color: var(--ui-accent);
-
-            svg {
-                transform: translate(2px, -2px);
-            }
-        }
     }
 
     // Visual frame shared by every project visual
@@ -525,7 +508,7 @@
         }
 
         .project_compact_title,
-        .project_link svg {
+        .project_featured_title {
             transition: none;
         }
     }

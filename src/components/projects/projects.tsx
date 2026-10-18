@@ -8,36 +8,32 @@ import type { Project } from "../../data/projects";
 
 const yearOf = (project: Project) => new Date(project.created_at).getFullYear();
 
+// Only the text block links to GitHub; the visual is decorative. Hovering
+// anywhere on the row still plays the visual's animation (see .project_featured).
 function FeaturedProject({ project }: { project: Project }) {
   return (
-    <article className="project_featured" data-cursor-project="true">
-      <div className="project_featured_body">
+    <article className="project_featured">
+      <a
+        className="project_featured_body"
+        href={project.html_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cursor-project="true"
+      >
         <p className="project_meta">
           {project.category} · {yearOf(project)}
         </p>
         <h3 className="project_featured_title">
-          <a href={project.html_url} target="_blank" rel="noopener noreferrer">
-            {project.name}
-          </a>
+          {project.name}
         </h3>
         <p className="project_hook">{project.hook}</p>
         <p className="project_stack">{project.stack.join(" · ")}</p>
-        <div className="project_links">
-          <a
-            className="project_link"
-            href={project.html_url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Code on GitHub
-            <ArrowDiagonalRight />
-          </a>
-        </div>
-      </div>
+      </a>
       {project.visual ? <ProjectVisual id={project.visual} /> : null}
     </article>
   );
 }
+
 
 function Projects({
   repos,
@@ -121,6 +117,7 @@ function Projects({
 
         <a
           className="projects_all"
+          data-cursor-project="true"
           href={PROFILE.githubUrl}
           target="_blank"
           rel="noopener noreferrer"

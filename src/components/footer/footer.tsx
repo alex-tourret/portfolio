@@ -1,57 +1,11 @@
-import { useEffect, useRef, useState } from "react";
 import "../../styles/footer.scss";
 import ArrowDiagonalRight from "../../utils/svgs/arrowDiagonalRight";
 import { PROFILE, getCurrentYear } from "../../config/profile";
 import { useSmoothScroll } from "../../utils/scroll/useSmoothScroll";
 
-type CopyState = "idle" | "copied" | "failed";
-
-const copyLabels: Record<CopyState, string> = {
-  idle: "Click to copy",
-  copied: "Copied ✓",
-  failed: "Copy failed, select the address instead",
-};
-
-function copyTextFallback(value: string) {
-  const textarea = document.createElement("textarea");
-  textarea.value = value;
-  textarea.setAttribute("readonly", "");
-  textarea.style.position = "absolute";
-  textarea.style.left = "-9999px";
-  document.body.appendChild(textarea);
-  textarea.select();
-
-  const didCopy = document.execCommand("copy");
-  document.body.removeChild(textarea);
-
-  if (!didCopy) {
-    throw new Error("Clipboard fallback failed");
-  }
-}
-
 function Contact() {
   const currentYear = getCurrentYear();
   const { scrollToHash } = useSmoothScroll();
-  const [copyState, setCopyState] = useState<CopyState>("idle");
-  const resetTimer = useRef<number>();
-
-  useEffect(() => () => window.clearTimeout(resetTimer.current), []);
-
-  async function copyToClipboard() {
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(PROFILE.email);
-      } else {
-        copyTextFallback(PROFILE.email);
-      }
-      setCopyState("copied");
-    } catch {
-      setCopyState("failed");
-    }
-
-    window.clearTimeout(resetTimer.current);
-    resetTimer.current = window.setTimeout(() => setCopyState("idle"), 2400);
-  }
 
   return (
     <footer>
@@ -67,20 +21,13 @@ function Contact() {
           </div>
 
           <div className="contact_reach">
-            <button
-              type="button"
+            <a
+              href={`mailto:${PROFILE.email}`}
               className="contact_email"
-              onClick={copyToClipboard}
               data-cursor-hero="yellow"
             >
               <span className="contact_email_address">{PROFILE.email}</span>
-              <span
-                className={`contact_email_hint is_${copyState}`}
-                aria-live="polite"
-              >
-                {copyLabels[copyState]}
-              </span>
-            </button>
+            </a>
 
             <div className="contact_links">
               <a

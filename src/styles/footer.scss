@@ -43,19 +43,10 @@
         color: rgba(239, 239, 239, 0.72);
     }
 
-    // The address is the call to action: big, copy on click.
+    // The address is the call to action: big, opens the mail app.
     .contact_email {
-        display: inline-flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.1rem;
-        padding: 0;
-        border: 0;
-        background: none;
+        display: inline-block;
         color: inherit;
-        font: inherit;
-        text-align: left;
-        cursor: pointer;
 
         &:focus-visible {
             outline: 2px solid rgba(247, 202, 24, 0.9);
@@ -93,22 +84,6 @@
 
         &::after {
             transform: scaleX(1);
-        }
-    }
-
-    .contact_email_hint {
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--contact-muted);
-
-        &.is_copied {
-            color: #4ade80;
-        }
-
-        &.is_failed {
-            color: #f87171;
         }
     }
 
