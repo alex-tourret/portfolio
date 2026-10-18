@@ -251,6 +251,12 @@
         text-underline-offset: 0.2em;
         transition: color 0.25s ease, text-decoration-color 0.25s ease;
 
+        svg {
+            width: 0.55em;
+            height: 0.55em;
+            margin-left: 0.3em;
+        }
+
         &:hover,
         &:focus-visible {
             color: var(--ui-accent);
@@ -277,9 +283,17 @@
     }
 
     .about_more {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
         align-self: flex-start;
         margin-top: -1rem;
         font-size: 0.92rem;
+
+        svg {
+            width: 0.6rem;
+            height: 0.6rem;
+        }
     }
 
     // How I work + Toolkit: one horizontal "method sheet". A faint tonal

@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import "../../styles/about.scss";
 import { PROFILE } from "../../config/profile";
+import ArrowDiagonalRight from "../../utils/svgs/arrowDiagonalRight";
 
 type Org = { name: string; url?: string };
 
@@ -135,7 +136,6 @@ function About() {
           <motion.figure className="about_portrait" {...reveal(0.1)}>
             <div className="about_portrait_frame">
               <picture>
-                <source srcSet="/portrait.avif" type="image/avif" />
                 <source srcSet="/portrait.webp" type="image/webp" />
                 <img
                   src="/portrait.jpg"
@@ -209,7 +209,7 @@ function About() {
                           className="about_path_org"
                         >
                           {step.org.name}
-                          <span aria-hidden="true"> ↗</span>
+                          <ArrowDiagonalRight />
                         </a>
                       ) : (
                         step.org.name
@@ -229,7 +229,8 @@ function About() {
             rel="noopener noreferrer"
             className="about_more ui_inline_link"
           >
-            Full experience on LinkedIn ↗
+            Full experience on LinkedIn
+            <ArrowDiagonalRight />
           </a>
         </div>
       </div>
