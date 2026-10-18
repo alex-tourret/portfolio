@@ -1,249 +1,419 @@
+@use "./breakpoints" as bp;
+
 .about_section {
-    padding-block: clamp(0.45rem, 1.4vh, 0.95rem) clamp(1.4rem, 3.6vh, 2.3rem);
+    --about-line: rgba(239, 239, 239, 0.12);
+    --about-muted: rgba(239, 239, 239, 0.6);
+    color: var(--ui-text);
+    padding-block: clamp(1rem, 3vh, 2rem) clamp(1.4rem, 3.6vh, 2.3rem);
 
-    @media screen and (max-width: 1200px) {
-        padding: 0;
-
+    .about_head {
+        padding-top: clamp(1rem, 2.4vh, 1.6rem);
     }
 
-    @media screen and (max-width: 768px) {
-        padding: 0;
+    .about_statement {
+        margin: clamp(0.9rem, 2vh, 1.4rem) 0 0;
+        max-width: 19ch;
+        font-size: var(--display-size);
+        font-weight: 200;
+        line-height: 1.02;
+        letter-spacing: -0.025em;
+        text-wrap: balance;
+
+        em {
+            font-style: normal;
+            font-weight: 400;
+            color: var(--ui-accent);
+        }
     }
 
-    .about_content {
-        display: flex;
-        flex-direction: column;
-        gap: clamp(1.8rem, 4vh, 3rem);
-    }
-
-    .about_content_intro {
+    // Portrait + main column
+    .about_body {
         display: grid;
-        grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+        grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+        gap: clamp(2rem, 5vw, 6rem);
+        margin-top: clamp(2.4rem, 6vh, 4.5rem);
         align-items: start;
-        gap: clamp(1.2rem, 3vw, 3.4rem);
 
-        @media screen and (max-width: 1100px) {
+        @include bp.down(bp.$bp-tablet-wide) {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+            gap: 2rem;
+        }
+
+        @include bp.down(bp.$bp-tablet) {
             grid-template-columns: 1fr;
         }
     }
 
-    .about_identity {
-        max-width: 64ch;
-    }
-
-    .about_section_intro {
-        margin-bottom: clamp(0.65rem, 1.8vh, 1rem);
-
-        .section_intro_title {
-            max-width: 22ch;
-            line-height: 1.07;
-        }
-    }
-
-    .about_copy {
-        margin-top: 0;
-        display: grid;
-        gap: 0.72rem;
-
-        p {
-            margin: 0;
-            color: #efefef;
-            font-size: clamp(1.04rem, 1.34vw, 1.24rem);
-            line-height: 1.44;
-        }
-    }
-
-    .about_glance {
-        margin-top: clamp(0.8rem, 2vh, 1.3rem);
-        display: grid;
-        gap: 0.44rem;
-
-        p {
-            margin: 0;
-            color: rgba(239, 239, 239, 0.78);
-            font-size: 0.95rem;
-            line-height: 1.35;
-        }
-
-        span {
-            color: rgba(247, 202, 24, 0.9);
-            font-weight: 600;
-        }
-    }
-
-    .about_content_visual {
-        width: clamp(250px, 26vw, 380px);
-        justify-self: end;
+    .about_aside {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(2rem, 5vh, 3rem);
         position: sticky;
         top: 12vh;
-        border-radius: 22px;
+
+        // On one column, let the story come before the hobbies.
+        @include bp.down(bp.$bp-tablet) {
+            display: contents;
+
+            .about_offclock {
+                order: 2;
+            }
+        }
+    }
+
+    .about_portrait {
+        margin: 0;
+    }
+
+    .about_offclock_list {
+        margin: 0;
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .about_offclock_item {
+        display: grid;
+        grid-template-columns: 6.5rem minmax(0, 1fr);
+        gap: 0.3rem 1rem;
+        align-items: baseline;
+
+        dt {
+            font-size: 1rem;
+        }
+
+        dd {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            color: var(--about-muted);
+        }
+    }
+
+    .about_portrait_frame {
+        position: relative;
         overflow: hidden;
-        border: 1px solid rgba(247, 202, 24, 0.24);
-        background: rgba(247, 202, 24, 0.06);
-        box-shadow: 0 24px 44px -30px rgba(0, 0, 0, 0.76);
+        border-radius: 4px;
+        background: #222;
 
         img {
             display: block;
             width: 100%;
-            aspect-ratio: 4 / 5;
+            height: auto;
+            aspect-ratio: 5 / 4;
             object-fit: cover;
-            object-position: center;
-            filter: saturate(0.96) contrast(1.02);
+            filter: saturate(0.88);
+            transition: filter 0.8s ease, transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        @media screen and (max-width: 1100px) {
-            position: relative;
-            top: auto;
-            justify-self: flex-start;
-            width: min(100%, 320px);
-            margin-top: 0.35rem;
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(247, 202, 24, 0.22);
+            border-radius: inherit;
+            pointer-events: none;
         }
 
-        @media screen and (max-width: 768px) {
-            width: min(100%, 280px);
+        &:hover img {
+            filter: saturate(1);
+            transform: scale(1.03);
         }
     }
 
-    .about_content_button {
+    .about_main {
+        order: 1;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(2rem, 5vh, 3.2rem);
+    }
+
+    .about_lede {
+        display: grid;
+        gap: 1rem;
+        max-width: 76ch;
+
+        p {
+            margin: 0;
+            text-wrap: pretty;
+            font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+            line-height: 1.5;
+            color: rgba(239, 239, 239, 0.78);
+        }
+
+        p:first-child {
+            font-size: clamp(1.2rem, 1.7vw, 1.6rem);
+            line-height: 1.38;
+            color: var(--ui-text);
+        }
+
+        strong {
+            font-weight: 400;
+            color: var(--ui-accent);
+        }
+    }
+
+    .about_block_label {
+        margin: 0 0 0.9rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--about-muted);
+    }
+
+    // Timeline
+    // A single vertical rail with one dot per step, instead of row rules.
+    .about_path {
+        --rail-gutter: 1.6rem;
+        --dot-size: 7px;
+        position: relative;
+        list-style: none;
+        margin: 0;
+        padding: 0 0 0 var(--rail-gutter);
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: calc(var(--dot-size) / 2);
+            top: 1.4rem;
+            bottom: 1.4rem;
+            width: 1px;
+            background: var(--about-line);
+        }
+    }
+
+    .about_path_row {
+        position: relative;
+        display: grid;
+        grid-template-columns: 11rem minmax(0, 1fr);
+        gap: 0.4rem 1.5rem;
+        align-items: baseline;
+        padding-block: 0.9rem;
+
+        > * {
+            transition: opacity 0.35s ease;
+        }
+
+        @include bp.down(bp.$bp-phone-large) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    // Hovering one step dims the others. Applied to the children because
+    // Framer Motion sets an inline opacity on the rows themselves.
+    @media (hover: hover) {
+        .about_path:hover .about_path_row:not(:hover) > * {
+            opacity: 0.35;
+        }
+    }
+
+    .about_path_period {
+        // The rail dot hangs off the date so it stays centred on it at every
+        // breakpoint (the row switches to a single column on phones).
+        position: relative;
+        font-family: var(--font-mono);
+        font-size: 0.76rem;
+        letter-spacing: 0.04em;
+        color: var(--about-muted);
+        white-space: nowrap;
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: calc(-1 * var(--rail-gutter));
+            top: 50%;
+            width: var(--dot-size);
+            height: var(--dot-size);
+            box-sizing: border-box;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            border: 1px solid rgba(239, 239, 239, 0.45);
+            background: var(--ui-bg);
+        }
+    }
+
+    .about_path_role {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+    }
+
+    .about_path_place {
+        font-size: 0.88rem;
+        color: var(--about-muted);
+    }
+
+    .about_path_org {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: rgba(239, 239, 239, 0.25);
+        text-underline-offset: 0.2em;
+        transition: color 0.25s ease, text-decoration-color 0.25s ease;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--ui-accent);
+            text-decoration-color: currentColor;
+        }
+    }
+
+    .about_path_note {
+        margin-top: 0.35rem;
+        max-width: 60ch;
+        font-size: 0.9rem;
+        line-height: 1.45;
+        color: rgba(239, 239, 239, 0.7);
+    }
+
+    .is_current .about_path_period {
+        color: var(--ui-accent);
+
+        &::before {
+            border-color: var(--ui-accent);
+            background: var(--ui-accent);
+            box-shadow: 0 0 0 4px rgba(247, 202, 24, 0.14);
+        }
+    }
+
+    .about_more {
+        align-self: flex-start;
+        margin-top: -1rem;
+        font-size: 0.92rem;
+    }
+
+    // How I work + Toolkit: one horizontal "method sheet". A faint tonal
+    // surface anchors it instead of rules; the toolkit sits in a darker tray
+    // at the bottom, on the same four columns as the principles.
+    .about_practice {
+        --practice-pad: clamp(1.4rem, 3.2vw, 3rem);
+        margin-top: clamp(4rem, 10vh, 7rem);
+        padding: var(--practice-pad) var(--practice-pad) 0;
+        border-radius: 10px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.015) 100%);
+        overflow: hidden;
+    }
+
+    .about_practice_head {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
-        gap: 0.55rem;
-        margin-top: clamp(0.9rem, 2.1vh, 1.3rem);
+        align-items: baseline;
+        gap: 0.4rem 1.2rem;
 
-        .about_content_button_link {
-            margin-top: 0;
-
-            @media screen and (max-width: 576px) {
-                font-size: 0.9rem;
-            }
+        .about_block_label {
+            margin: 0;
         }
     }
 
-    .about_content_skills {
-        margin-top: clamp(0.1rem, 0.6vh, 0.5rem);
-
-        @media screen and (max-width: 768px) {
-            margin-top: 0.3rem;
-        }
-    }
-
-    .about_principles {
-        padding: clamp(0.75rem, 1.8vh, 1.2rem);
-        border: 1px solid rgba(239, 239, 239, 0.14);
-        border-radius: 14px;
-        background:
-            radial-gradient(circle at 10% 16%, rgba(247, 202, 24, 0.08), transparent 48%),
-            linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
-    }
-
-    .about_principles_label {
+    .about_practice_intro {
         margin: 0;
-        color: rgba(247, 202, 24, 0.86);
-        font-size: 0.74rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+        font-weight: 200;
     }
 
-    .about_principles_grid {
-        margin-top: 0.6rem;
+    .about_principles_list {
+        list-style: none;
+        margin: clamp(2rem, 4.5vh, 2.8rem) 0 0;
+        padding: 0;
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.55rem;
+        gap: 2rem clamp(1.4rem, 2.6vw, 2.8rem);
 
-        @media screen and (max-width: 1200px) {
+        @include bp.down(bp.$bp-desktop) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        @media screen and (max-width: 640px) {
+        @include bp.down(bp.$bp-phone-large) {
             grid-template-columns: 1fr;
         }
     }
 
-    .about_principle_item {
-        border: 1px solid rgba(239, 239, 239, 0.13);
-        border-radius: 12px;
-        padding: 0.62rem 0.68rem;
-        background: rgba(255, 255, 255, 0.01);
+    .about_principle {
+        position: relative;
+        padding-top: 1.6rem;
+
+        &:hover .about_principle_index {
+            color: var(--ui-accent);
+        }
+    }
+
+    // Oversized italic numeral as a watermark in the top-right corner.
+    .about_principle_index {
+        position: absolute;
+        top: -1.1rem;
+        right: 0;
+        z-index: 0;
+        font-weight: 200;
+        font-size: clamp(3.6rem, 5vw, 4.8rem);
+        line-height: 1;
+        letter-spacing: -0.04em;
+        color: rgba(247, 202, 24, 0.28);
+        pointer-events: none;
+        transition: color 0.4s ease;
+    }
+
+    .about_principle_title,
+    .about_principle_detail {
+        position: relative;
+        z-index: 1;
     }
 
     .about_principle_title {
-        margin: 0;
-        color: #efefef;
-        font-size: 0.85rem;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
+        margin: 0 0 0.55rem;
+        font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        line-height: 1.15;
     }
 
     .about_principle_detail {
-        margin: 0.22rem 0 0;
-        color: rgba(239, 239, 239, 0.72);
-        font-size: 0.82rem;
-        line-height: 1.35;
+        margin: 0;
+        font-size: 0.94rem;
+        line-height: 1.5;
+        color: rgba(239, 239, 239, 0.66);
     }
 
-    .about_content_skills_list {
+    .about_toolkit_tray {
+        margin: clamp(2.2rem, 5vh, 3rem) calc(-1 * var(--practice-pad)) 0;
+        padding: clamp(1.1rem, 2.4vh, 1.5rem) var(--practice-pad);
+        background: rgba(0, 0, 0, 0.22);
+
+        .about_block_label {
+            margin-bottom: 0.8rem;
+        }
+    }
+
+    .about_toolkit {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: clamp(0.72rem, 1.2vw, 1rem);
-        margin-top: clamp(1.5rem, 3.8vh, 2.7rem);
-        color: #efefef;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem clamp(1.4rem, 2.6vw, 2.8rem);
+        margin: 0;
 
-        @media screen and (max-width: 1200px) {
-            grid-template-columns: repeat(2, 1fr);
-            margin-top: 2.2rem;
+        @include bp.down(bp.$bp-desktop) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        @media screen and (max-width: 768px) {
+        @include bp.down(bp.$bp-phone-large) {
             grid-template-columns: 1fr;
-            margin-top: 1.9rem;
         }
 
-        .about_content_skills_list_item {
-            border: 1px solid rgba(239, 239, 239, 0.14);
-            border-radius: 14px;
-            background:
-                radial-gradient(circle at 14% 16%, rgba(247, 202, 24, 0.08), transparent 52%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.022) 0%, rgba(255, 255, 255, 0.01) 100%);
+        dt {
+            font-size: 0.98rem;
+        }
 
-            .about_content_skills_list_item_container {
-                margin-left: 0;
-                padding: clamp(0.95rem, 1.6vw, 1.25rem);
+        dd {
+            margin: 0.25rem 0 0;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            color: var(--about-muted);
+        }
+    }
 
-                span {
-                    font-size: 2.8rem;
-                    color: #F7CA18;
-                    opacity: .86;
-
-                    @media screen and (max-width: 768px) {
-                        font-size: 2.5rem;
-                    }
-                }
-
-                h3 {
-                    margin-top: 0.34rem;
-                    font-size: clamp(1.45rem, 2vw, 1.8rem);
-                    font-weight: 500;
-                    margin-bottom: 0.42rem;
-
-                    @media screen and (max-width: 768px) {
-                        font-size: 1.36rem;
-                        margin-top: 0.25rem;
-                        margin-bottom: 0.46rem;
-                    }
-                }
-
-                p {
-                    font-size: 1.03rem;
-                    line-height: 1.35;
-                    margin-bottom: 0;
-                    color: rgba(239, 239, 239, 0.82);
-
-                    @media screen and (max-width: 768px) {
-                        font-size: 0.98rem;
-                    }
-                }
-            }
+    @media (prefers-reduced-motion: reduce) {
+        .about_portrait_frame img,
+        .about_path_row > *,
+        .about_principle_index {
+            transition: none;
         }
     }
 }

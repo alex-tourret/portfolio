@@ -169,7 +169,7 @@ function Preloader({
                 initial="initial"
                 animate="enter"
               >
-                Alexandre Tourret · Full-Stack Engineer
+                Alexandre Tourret · Software Engineer
               </motion.p>
 
               <div className="preloader_logs" aria-hidden="true">

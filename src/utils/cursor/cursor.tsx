@@ -140,7 +140,7 @@ function Cursor({ isDataFetched }: { isDataFetched: boolean }) {
         '[data-cursor-certification="true"]',
       );
       const isProjectLink = !!target?.closest(
-        ".projects_container_list_item:not(.loading)",
+        '.projects_container_list_item:not(.loading), [data-cursor-project="true"]',
       );
       const isGithubLink = !!target?.closest(
         'a[href*="github.com"], [data-tooltip-content="Github"]',

@@ -75,6 +75,7 @@
 
 .hero_kicker {
   margin: 0;
+  font-family: var(--font-mono);
   font-size: 0.9rem;
   letter-spacing: 0.145em;
   text-transform: uppercase;
@@ -232,6 +233,7 @@
 }
 
 .hero_skill {
+  font-family: var(--font-mono);
   font-size: 0.82rem;
   letter-spacing: 0.085em;
   text-transform: uppercase;
@@ -243,6 +245,7 @@
 }
 
 .hero_avail {
+  font-family: var(--font-mono);
   display: flex;
   align-items: center;
   gap: 0.5rem;

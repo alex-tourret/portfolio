@@ -1,28 +1,53 @@
 import "../../styles/projects.scss";
 import "../../styles/style.scss";
 import SectionIntro from "../shared/sectionIntro";
+import ProjectVisual from "./projectVisual";
+import ArrowDiagonalRight from "../../utils/svgs/arrowDiagonalRight";
 import { PROFILE } from "../../config/profile";
-import type { Repo } from "../../types/repo";
+import type { Project } from "../../data/projects";
 
-/**
- * Renders a section containing a list of projects.
- * Each project is displayed as a clickable item and includes the project name, description,
- * and tags representing the programming languages used.
- *
- * @component
- *
- * @param {Object[]} repos - An array of `Repo` objects representing the projects to be displayed.
- *
- * @returns {JSX.Element} The rendered component.
- */
+const yearOf = (project: Project) => new Date(project.created_at).getFullYear();
+
+function FeaturedProject({ project }: { project: Project }) {
+  return (
+    <article className="project_featured" data-cursor-project="true">
+      <div className="project_featured_body">
+        <p className="project_meta">
+          {project.category} · {yearOf(project)}
+        </p>
+        <h3 className="project_featured_title">
+          <a href={project.html_url} target="_blank" rel="noopener noreferrer">
+            {project.name}
+          </a>
+        </h3>
+        <p className="project_hook">{project.hook}</p>
+        <p className="project_stack">{project.stack.join(" · ")}</p>
+        <div className="project_links">
+          <a
+            className="project_link"
+            href={project.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Code on GitHub
+            <ArrowDiagonalRight />
+          </a>
+        </div>
+      </div>
+      {project.visual ? <ProjectVisual id={project.visual} /> : null}
+    </article>
+  );
+}
+
 function Projects({
   repos,
   isDataFetched,
 }: {
-  repos: Repo[];
+  repos: Project[];
   isDataFetched: boolean;
 }) {
-  const skeletonRows = Array.from({ length: 6 });
+  const featured = repos.filter((project) => project.featured);
+  const others = repos.filter((project) => !project.featured);
 
   return (
     <section id="projects" className="projects">
@@ -30,94 +55,79 @@ function Projects({
         <SectionIntro
           eyebrow="Projects"
           title="Selected Work"
-          subtitle="Built under real constraints, with clear trade-offs."
+          subtitle="Mostly built at 42: no lectures, just a subject, a blank repo and peers to review with."
           titleTag="h2"
           className="projects_section_intro"
         />
-        <div className="projects_container_list">
-          {!isDataFetched ? (
-            skeletonRows.map((_, index) => (
-              <div
-                className="projects_container_list_item loading"
-                key={`skeleton-${index}`}
-              >
-                <div className="projects_container_list_item_container">
-                  <h3 className="projects_container_list_item_title skeleton-line skeleton-title"></h3>
-                  <div className="projects_container_bottom">
-                    <p className="projects_container_list_item_text skeleton-line skeleton-text"></p>
-                    <div className="projects_container_list_item_tags">
-                      <div className="projects_container_list_item_tag skeleton-tag"></div>
-                      <div className="projects_container_list_item_tag skeleton-tag"></div>
-                    </div>
-                  </div>
-                </div>
+
+        {!isDataFetched ? (
+          <div className="projects_skeleton" aria-hidden="true">
+            {Array.from({ length: 3 }, (_, index) => (
+              <div className="projects_skeleton_row skeleton-line" key={index} />
+            ))}
+          </div>
+        ) : repos.length > 0 ? (
+          <>
+            <div className="projects_featured">
+              {featured.map((project) => (
+                <FeaturedProject project={project} key={project.id} />
+              ))}
+            </div>
+
+            {others.length > 0 ? (
+              <div className="projects_more">
+                <p className="projects_more_label">More from 42</p>
+                <ul className="projects_compact">
+                  {others.map((project) => (
+                    <li key={project.id}>
+                      <a
+                        className="projects_container_list_item project_compact"
+                        href={project.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span className="project_compact_title">
+                          {project.name}
+                        </span>
+                        <span className="project_compact_hook">
+                          {project.hook}
+                        </span>
+                        <span className="project_compact_stack">
+                          {project.stack.join(" · ")}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))
-          ) : repos.length > 0 ? (
-            repos.map((repo: Repo) => (
+            ) : null}
+          </>
+        ) : (
+          <div className="projects_container_info">
+            <p>
+              Projects data is temporarily unavailable. You can still visit my{" "}
               <a
-                className="projects_container_list_item"
-                key={repo.id}
-                href={repo.html_url}
+                className="ui_inline_link"
+                href={PROFILE.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="projects_container_list_item_container">
-                  <h3 className="projects_container_list_item_title">
-                    {repo.name}
-                  </h3>
-                  <div className="projects_container_bottom">
-                    <p className="projects_container_list_item_text">
-                      {repo.description}
-                    </p>
-                    <div className="projects_container_list_item_tags">
-                      {Object.keys(repo.languages).map((language) => (
-                        <div
-                          className="projects_container_list_item_tag"
-                          key={language}
-                        >
-                          <p>{language}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                GitHub
               </a>
-            ))
-          ) : (
-            <div className="projects_container_info">
-              <p>
-                Projects data is temporarily unavailable. You can still visit my{" "}
-                <a
-                  className="ui_inline_link"
-                  href={PROFILE.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub
-                </a>
-                .
-              </p>
-            </div>
-          )}
-        </div>
-        <div className="projects_cta" aria-label="More projects on GitHub">
-          <div className="projects_cta_text">
-            <p className="projects_cta_title">Want to go deeper?</p>
-            <p className="projects_cta_subtitle">
-              Explore full repositories, commit history, and technical details.
+              .
             </p>
           </div>
-          <a
-            className="projects_cta_button ui_button ui_button_primary"
-            href={PROFILE.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor-hero="black"
-          >
-            Browse GitHub
-          </a>
-        </div>
+        )}
+
+        <a
+          className="projects_all"
+          href={PROFILE.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>Browse all repositories on GitHub</span>
+          <ArrowDiagonalRight />
+        </a>
       </div>
     </section>
   );

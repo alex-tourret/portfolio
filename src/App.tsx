@@ -8,11 +8,10 @@ import "./styles/style.scss";
 import Contact from "./components/footer/footer";
 import { fetchRepos } from "./utils/api/api";
 import MenuBurger from "./components/navbar/menuBurger/menuBurger";
-import { SnackbarProvider } from "notistack";
 import Preloader from "./utils/preloader/preloader";
 import { AnimatePresence } from "framer-motion";
 import { SmoothScrollProvider } from "./utils/scroll/smoothScroll";
-import type { Repo } from "./types/repo";
+import type { Project } from "./data/projects";
 
 const NAV_DESKTOP_MIN_WIDTH = 1024;
 const DESKTOP_NAV_HIDE_THRESHOLD = 120;
@@ -28,7 +27,7 @@ function App() {
     preloaderMode === "always" ||
     (preloaderMode !== "off" && import.meta.env.PROD);
 
-  const [repos, setRepos] = useState<Repo[]>([]);
+  const [repos, setRepos] = useState<Project[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [isMenuToggled, setIsMenuToggled] = useState(false);
@@ -158,32 +157,30 @@ function App() {
                 </div>
               </header>
               <main>
-                <SnackbarProvider maxSnack={3}>
-                  <Cursor isDataFetched={isDataFetched} />
-                  <div className="content_wrapper" ref={containerRef}>
-                    <div className="container">
-                      <Hero />
-                      <About />
-                      <Certifications />
-                      <Suspense
-                        fallback={
-                          <section
-                            className="projects_suspense_placeholder"
-                            aria-hidden="true"
-                          >
-                            <div className="projects_suspense_line" />
-                            <div className="projects_suspense_line" />
-                            <div className="projects_suspense_line" />
-                            <div className="projects_suspense_line" />
-                          </section>
-                        }
-                      >
-                        <Projects repos={repos} isDataFetched={isDataFetched} />
-                      </Suspense>
-                      <Contact />
-                    </div>
+                <Cursor isDataFetched={isDataFetched} />
+                <div className="content_wrapper" ref={containerRef}>
+                  <div className="container">
+                    <Hero />
+                    <About />
+                    <Certifications />
+                    <Suspense
+                      fallback={
+                        <section
+                          className="projects_suspense_placeholder"
+                          aria-hidden="true"
+                        >
+                          <div className="projects_suspense_line" />
+                          <div className="projects_suspense_line" />
+                          <div className="projects_suspense_line" />
+                          <div className="projects_suspense_line" />
+                        </section>
+                      }
+                    >
+                      <Projects repos={repos} isDataFetched={isDataFetched} />
+                    </Suspense>
+                    <Contact />
                   </div>
-                </SnackbarProvider>
+                </div>
               </main>
             </>
           )}

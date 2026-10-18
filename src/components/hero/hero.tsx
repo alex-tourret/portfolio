@@ -170,7 +170,7 @@ function Hero() {
             <div className="hero_primary_wrap">
               <div className="hero_primary">
                 <p className="hero_kicker">
-                  SOFTWARE ENGINEER · FULL-STACK EXECUTION
+                  HI, I'M ALEX
                 </p>
                 <h1 className="hero_text">
                   <span>From idea</span>
@@ -185,8 +185,9 @@ function Hero() {
             <div className="hero_bottom">
               <div className="hero_bottom_left">
                 <p className="hero_lead">
-                  Based in Lyon, I turn requirements into reliable product
-                  features, from technical choices to testing and observability.
+                  I like the thinking part most: understanding a problem,
+                  designing the solution and making the product better for the
+                  people who use it.
                 </p>
                 <div className="hero_actions">
                   <a
@@ -219,21 +220,14 @@ function Hero() {
               </div>
 
               <div className="hero_bottom_right">
-                <ul className="hero_skills" aria-label="Core expertise">
-                  <li className="hero_skill hero_skill--hi">
-                    Feature Ownership, End to End
-                  </li>
-                  <li className="hero_skill hero_skill--hi">
-                    Backend, Frontend & API Design
-                  </li>
-                  <li className="hero_skill">
-                    Architecture · Testing · Observability
-                  </li>
-                  <li className="hero_skill">AI & Automation in Practice</li>
+                <ul className="hero_skills" aria-label="Current role">
+                  <li className="hero_skill">Currently</li>
+                  <li className="hero_skill hero_skill--hi">Instant Rips</li>
+                  <li className="hero_skill hero_skill--hi">Fanatics Collect</li>
                 </ul>
                 <p className="hero_avail">
                   <span className="hero_avail_dot" aria-hidden="true" />
-                  Available · Remote / Lyon
+                  Based in Lyon, France
                 </p>
               </div>
             </div>

@@ -1,79 +1,176 @@
+@use "./breakpoints" as bp;
+
 .certifications_section {
+  --cert-line: rgba(239, 239, 239, 0.12);
+  --cert-muted: rgba(239, 239, 239, 0.6);
   width: 100%;
   padding-top: clamp(0.6rem, 2vh, 1.2rem);
 }
 
 .certifications_container {
-  border-top: 1px solid rgba(239, 239, 239, 0.14);
   padding-top: clamp(1.35rem, 3.2vh, 2.1rem);
 }
 
 .certifications_grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.92rem, 1.5vw, 1.3rem);
+  gap: clamp(0.9rem, 1.5vw, 1.3rem);
 
-  @media screen and (max-width: 980px) {
+  @include bp.down(980px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @media screen and (max-width: 640px) {
+  @include bp.down(640px) {
     grid-template-columns: 1fr;
   }
 }
 
 .cert_card {
-  border: 1px solid rgba(239, 239, 239, 0.14);
-  border-radius: 14px;
-  padding: clamp(0.95rem, 1.5vw, 1.2rem);
-  background:
-    radial-gradient(circle at 14% 16%, rgba(247, 202, 24, 0.07), transparent 54%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.022) 0%, rgba(255, 255, 255, 0.01) 100%);
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.68rem;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  padding: clamp(1.1rem, 1.6vw, 1.5rem);
+  border: 1px solid var(--cert-line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.018);
+  color: var(--ui-text);
   text-decoration: none;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 
   &:hover {
-    border-color: rgba(247, 202, 24, 0.32);
+    border-color: rgba(247, 202, 24, 0.4);
+    background: rgba(255, 255, 255, 0.03);
   }
 
   &:focus-visible {
-    border-color: rgba(247, 202, 24, 0.42);
-    outline: 2px solid rgba(247, 202, 24, 0.32);
+    outline: 2px solid rgba(247, 202, 24, 0.9);
     outline-offset: 3px;
   }
 
   h3 {
-    margin: 0;
-    color: #efefef;
-    font-size: clamp(1.02rem, 1.2vw, 1.15rem);
-    line-height: 1.25;
+    margin: 0.9rem 0 0.5rem;
+    font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
   }
+}
 
-  .cert_issuer {
-    margin: 0;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(247, 202, 24, 0.8);
+.cert_top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 1;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cert_issuer {
+  color: var(--ui-accent);
+}
+
+.cert_verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(239, 239, 239, 0.72);
+
+  svg {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    fill: none;
+    stroke: #4ade80;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
+}
 
-  .cert_detail {
-    margin: 0;
-    color: rgba(239, 239, 239, 0.74);
-    font-size: 0.84rem;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    line-height: 1.4;
+// Level row: an 8-step EQF ladder filled up to the earned level.
+.cert_level {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.1rem;
+  margin-top: clamp(1.6rem, 3.4vh, 2.4rem);
+}
+
+.cert_ladder {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 2.1rem;
+}
+
+.cert_step {
+  --i: 0;
+  width: 6px;
+  height: calc(30% + var(--i) * 10%);
+  border-radius: 1px;
+  background: rgba(239, 239, 239, 0.14);
+  transition: background-color 0.3s ease;
+
+  &.is_filled {
+    background: rgba(247, 202, 24, 0.55);
+    transition-delay: calc(var(--i) * 45ms);
   }
+}
 
-  .cert_summary {
-    margin: 0;
-    color: rgba(239, 239, 239, 0.78);
-    font-size: 0.92rem;
-    line-height: 1.45;
-    min-height: 6.2em;
+.cert_card:hover .cert_step.is_filled {
+  background: var(--ui-accent);
+}
+
+.cert_level_text {
+  font-size: 0.86rem;
+  line-height: 1.2;
+  color: var(--cert-muted);
+}
+
+.cert_summary {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: rgba(239, 239, 239, 0.72);
+}
+
+.cert_cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: auto;
+  padding-top: 1.4rem;
+  font-size: 0.86rem;
+  color: var(--cert-muted);
+  transition: color 0.3s ease;
+
+  svg {
+    width: 0.62rem;
+    height: 0.62rem;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+    path {
+      fill: currentColor;
+    }
+  }
+}
+
+.cert_card:hover .cert_cta {
+  color: var(--ui-accent);
+
+  svg {
+    transform: translate(2px, -2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cert_step,
+  .cert_cta,
+  .cert_cta svg {
+    transition: none;
   }
 }

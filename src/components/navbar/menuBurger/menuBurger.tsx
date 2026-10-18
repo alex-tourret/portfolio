@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import "../../../styles/menuBurger.scss";
 import Linkedin from "../../../utils/svgs/linkedin";
 import Github from "../../../utils/svgs/github";
-import Malt from "../../../utils/svgs/malt";
 import CvLink from "../../shared/cvLink";
 import MagneticButton, { MagneticLayer } from "./magneticButton";
 import { useSmoothScroll } from "../../../utils/scroll/useSmoothScroll";
@@ -330,17 +329,6 @@ function MenuBurger({
                   aria-label="Open GitHub profile"
                 >
                   <Github />
-                </a>
-                <a
-                  href={PROFILE.maltUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="icon menu_social_icon ui_icon_button"
-                  data-cursor-default="true"
-                  onClick={() => closeMenu({ restoreFocus: false })}
-                  aria-label="Open Malt profile"
-                >
-                  <Malt />
                 </a>
                 <CvLink
                   variant="icon"

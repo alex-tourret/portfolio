@@ -1,25 +1,16 @@
 import reposData from "../../data/repos.json";
+import { projectContent, type Project } from "../../data/projects";
 import type { Repo } from "../../types/repo";
 
-const curatedRepoNames = [
-  "leaffliction",
-  "total-perspective-vortex",
-  "multilayer-perceptron",
-  "hypertube",
-  "matcha",
-  "camagru",
-  "ft_transcendence",
-];
-
-function getCuratedRepos(allRepos: Repo[]) {
+function getCuratedProjects(allRepos: Repo[]): Project[] {
   const repoByName = new Map(
     allRepos.map((repo) => [repo.name.toLowerCase(), repo]),
   );
-  const curated = curatedRepoNames
-    .map((repoName) => repoByName.get(repoName.toLowerCase()))
-    .filter((repo): repo is Repo => Boolean(repo));
 
-  return curated.length > 0 ? curated : allRepos;
+  return projectContent.flatMap(({ repo: repoName, ...content }) => {
+    const repo = repoByName.get(repoName.toLowerCase());
+    return repo ? [{ ...repo, ...content }] : [];
+  });
 }
 
 export async function fetchRepos({
@@ -27,9 +18,6 @@ export async function fetchRepos({
 }: {
   limit?: number;
 } = {}) {
-  const allRepos = reposData as Repo[];
-  const curatedRepos = getCuratedRepos(allRepos);
-  const repos =
-    typeof limit === "number" ? curatedRepos.slice(0, limit) : curatedRepos;
-  return repos;
+  const projects = getCuratedProjects(reposData as Repo[]);
+  return typeof limit === "number" ? projects.slice(0, limit) : projects;
 }
