@@ -352,30 +352,6 @@ a {
     }
 }
 
-.ui_icon_button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    height: auto;
-    border: none;
-    background: transparent;
-    color: rgba(239, 239, 239, 0.86);
-    transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
-    opacity: 0.9;
-
-    &:hover {
-        transform: translateY(-1px);
-        color: #f7ca18;
-        opacity: 1;
-    }
-
-    &:focus-visible {
-        outline: 2px solid rgba(247, 202, 24, 0.9);
-        outline-offset: 3px;
-    }
-}
-
 .highlight {
     color: #F7CA18;
     font-weight: bolder;

@@ -1,9 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import "../../../styles/menuBurger.scss";
-import Linkedin from "../../../utils/svgs/linkedin";
-import Github from "../../../utils/svgs/github";
-import CvLink from "../../shared/cvLink";
+import ArrowDiagonalRight from "../../../utils/svgs/arrowDiagonalRight";
 import MagneticButton, { MagneticLayer } from "./magneticButton";
 import { useSmoothScroll } from "../../../utils/scroll/useSmoothScroll";
 import { PROFILE, getCurrentYear } from "../../../config/profile";
@@ -11,10 +9,6 @@ import { PROFILE, getCurrentYear } from "../../../config/profile";
 const SCROLL_SHOW_THRESHOLD = 220;
 const SCROLL_HIDE_THRESHOLD = 170;
 const TOP_RESET_THRESHOLD = 24;
-const BURGER_BASE_BACKGROUND = "#efefef";
-const BURGER_BASE_LINES = "#F7CA18";
-const BURGER_ACTIVE_BACKGROUND = "#F7CA18";
-const BURGER_ACTIVE_LINES = "#efefef";
 const MENU_PANEL_ID = "site-navigation-drawer";
 const MENU_TITLE_ID = "site-navigation-title";
 const MENU_FOCUSABLE_SELECTOR =
@@ -118,8 +112,6 @@ function MenuBurger({
   setIsMenuToggled: React.Dispatch<React.SetStateAction<boolean>>;
   isPinned?: boolean;
 }) {
-  const [isButtonHovered, setIsButtonHovered] = useState(false);
-  const [isButtonFocused, setIsButtonFocused] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const currentYear = getCurrentYear();
 
@@ -218,14 +210,7 @@ function MenuBurger({
     };
   }, [closeMenu, isMenuOpen]);
 
-  const isBurgerInverted = isMenuOpen || isButtonHovered || isButtonFocused;
   const shouldShowBurger = isPinned || (hasScrolled && isVisible);
-  const burgerBackgroundColor = isBurgerInverted
-    ? BURGER_ACTIVE_BACKGROUND
-    : BURGER_BASE_BACKGROUND;
-  const burgerLineColor = isBurgerInverted
-    ? BURGER_ACTIVE_LINES
-    : BURGER_BASE_LINES;
 
   return (
     <>
@@ -234,27 +219,21 @@ function MenuBurger({
         className={`button-2 ${shouldShowBurger ? "visible" : "hidden"}`}
         speed={0.3}
         scale={1.2}
-        tolerance={0.9}
+        tolerance={0.6}
         type="button"
-        aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-label={
+          isMenuOpen ? "Close navigation menu" : "Open navigation menu"
+        }
         aria-controls={MENU_PANEL_ID}
         aria-expanded={isMenuOpen}
         aria-haspopup="dialog"
         onClick={toggleMenu}
-        onMouseEnter={() => setIsButtonHovered(true)}
-        onMouseLeave={() => setIsButtonHovered(false)}
-        onFocus={() => setIsButtonFocused(true)}
-        onBlur={() => setIsButtonFocused(false)}
       >
         <MagneticLayer
           className="button-1 burger-trigger_shell"
           speed={0.3}
           scale={1.2}
           tolerance={0.9}
-          style={{
-            backgroundColor: burgerBackgroundColor,
-            color: burgerLineColor,
-          }}
           aria-hidden="true"
         >
           <BurgerVisual isOpen={isMenuOpen} />
@@ -307,39 +286,44 @@ function MenuBurger({
                 </div>
               </nav>
 
-              <div className="menu-socials">
-                <a
-                  href={PROFILE.linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="icon menu_social_icon ui_icon_button"
-                  data-cursor-default="true"
-                  onClick={() => closeMenu({ restoreFocus: false })}
-                  aria-label="Open LinkedIn profile"
-                >
-                  <Linkedin />
-                </a>
-                <a
-                  href={PROFILE.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="icon menu_social_icon ui_icon_button"
-                  data-cursor-default="true"
-                  onClick={() => closeMenu({ restoreFocus: false })}
-                  aria-label="Open GitHub profile"
-                >
-                  <Github />
-                </a>
-                <CvLink
-                  variant="icon"
-                  className="icon menu_social_icon"
-                  onClick={() => closeMenu({ restoreFocus: false })}
-                  aria-label="Open CV"
-                  title="Open CV"
-                />
+              <div className="menu-footer">
+                <div className="menu-links">
+                  <a
+                    href={PROFILE.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="menu-link"
+                    onClick={() => closeMenu({ restoreFocus: false })}
+                  >
+                    LinkedIn
+                    <ArrowDiagonalRight />
+                  </a>
+                  <a
+                    href={PROFILE.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="menu-link"
+                    onClick={() => closeMenu({ restoreFocus: false })}
+                  >
+                    GitHub
+                    <ArrowDiagonalRight />
+                  </a>
+                  <a
+                    href={PROFILE.cvPublicPath}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                    className="menu-link"
+                    onClick={() => closeMenu({ restoreFocus: false })}
+                  >
+                    CV
+                    <span aria-hidden="true">↓</span>
+                  </a>
+                </div>
+                <p className="menu-copyright">
+                  © {currentYear} Alexandre Tourret
+                </p>
               </div>
-
-              <div className="menu-footer">@ {currentYear} Alexandre Tourret</div>
             </div>
           </motion.aside>
         ) : null}

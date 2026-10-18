@@ -111,10 +111,6 @@
             width: 0.62rem;
             height: 0.62rem;
             transition: transform 0.3s var(--projects-ease);
-
-            path {
-                fill: currentColor;
-            }
         }
 
         &:hover,
@@ -495,10 +491,6 @@
             height: 0.8rem;
             flex-shrink: 0;
             transition: transform 0.4s var(--projects-ease);
-
-            path {
-                fill: currentColor;
-            }
         }
 
         &:hover,

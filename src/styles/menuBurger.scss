@@ -41,12 +41,17 @@
     }
 }
 
+// The trigger is an invisible hit area larger than the visible 70px disc, so
+// the magnet starts pulling before the pointer reaches it. Offsets keep the
+// disc where it was when the area was 100px.
 .button-2 {
-    top: 3vh;
-    right: 3vw;
+    --burger-hit: 130px;
+    --burger-hit-offset: calc((var(--burger-hit) - 100px) / 2);
+    top: calc(3vh - var(--burger-hit-offset));
+    right: calc(3vw - var(--burger-hit-offset));
     position: fixed;
-    height: 100px;
-    width: 100px;
+    height: var(--burger-hit);
+    width: var(--burger-hit);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -76,186 +81,182 @@
     }
 }
 
+// Drawer: light panel. One padding token drives every edge so the title,
+// links and footer share the same left alignment.
 .menu {
+    --menu-pad-x: clamp(1.6rem, 5vw, 3.6rem);
+    --menu-ink: #191919;
+    --menu-muted: rgba(25, 25, 25, 0.55);
     position: fixed;
     right: 0;
     top: 0;
     height: 100%;
-    width: min(34rem, 55vw);
+    width: min(36rem, 40vw);
     background: #efefef;
+    color: var(--menu-ink);
     z-index: 2;
     will-change: transform;
+
+    @include bp.down(bp.$bp-desktop) {
+        width: min(36rem, 55vw);
+    }
 
     @include bp.down(bp.$bp-tablet) {
         width: 100vw;
     }
 
-    @include bp.up(bp.$bp-tablet-wide) {
-        width: min(36rem, 48vw);
-    }
-
-    @include bp.up(bp.$bp-desktop) {
-        width: min(36rem, 40vw);
-    }
-
     .menu-content {
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
         height: 100%;
+        padding: clamp(2.4rem, 8vh, 5rem) var(--menu-pad-x) clamp(1.4rem, 4vh, 2.4rem);
+    }
 
-        .menu-title {
-            margin-top: 6vh;
-            margin-left: 6vw;
-            color: #303030;
-            font-size: 2.35rem;
-
-            @include bp.down(bp.$bp-tablet) {
-                margin-top: 9vh;
-                font-size: 2.25rem;
-            }
-
-            @include bp.down(bp.$bp-phone-compact) {
-                margin-top: 10vh;
-                font-size: 2rem;
-            }
-
-            @include bp.up(bp.$bp-desktop) {
-                margin-top: 8vh;
-                font-size: 3rem;
-            }
-        }
-
-        .menu-socials {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            margin-top: 5vh;
-            padding-left: 0;
-            margin-left: 5vw;
-            gap: 0.46rem;
-
-            @include bp.down(bp.$bp-phone-compact) {
-                gap: 0.4rem;
-            }
-
-            .icon {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 2.15rem;
-                height: 2.15rem;
-                margin: 0;
-                color: rgba(48, 48, 48, 0.9);
-                text-decoration: none;
-                cursor: pointer;
-                border: 1px solid rgba(48, 48, 48, 0.16);
-                border-radius: 999px;
-                background: rgba(255, 255, 255, 0.08);
-                transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-
-                svg {
-                    width: 1.08rem;
-                    height: 1.08rem;
-                    transition: none;
-                }
-
-                &:hover,
-                &:focus-visible {
-                    color: #f7ca18;
-                    background: rgba(247, 202, 24, 0.08);
-                    border-color: rgba(247, 202, 24, 0.45);
-                    outline: 1px solid rgba(247, 202, 24, 0.55);
-                    outline-offset: 1px;
-                }
-            }
-        }
-
-        .menu-footer {
-            margin-top: auto;
-            margin-bottom: 2vh;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
+    .menu-title {
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--menu-muted);
     }
 
     .menu-items {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        margin-top: 8vh;
-
-        @include bp.down(bp.$bp-tablet) {
-            margin-top: 12vh;
-        }
-
-        @include bp.down(bp.$bp-phone-compact) {
-            margin-top: 18vh;
-        }
+        gap: clamp(0.2rem, 1.2vh, 0.7rem);
+        margin-top: clamp(1.8rem, 6vh, 3.6rem);
     }
 
     .menu-item {
         display: inline-flex;
-        margin-left: 5vw;
-        padding: 20px;
-        color: #303030;
-        font-size: 2.35rem;
+        padding-block: 0.12em;
+        color: var(--menu-ink);
+        font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+        font-weight: 200;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
         text-decoration: none;
-        background: transparent;
-        border: none;
-        font: inherit;
-        text-align: left;
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
         span {
             position: relative;
 
             &::before {
-                content: '';
+                content: "";
                 position: absolute;
-                bottom: -2px;
+                bottom: 0.04em;
                 left: 0;
-                width: 0%;
-                height: 2px;
-                background-color: #F7CA18;
-                transition: all 0.2s ease-in-out;
-            }
-
-            &:hover::before {
                 width: 100%;
+                height: 2px;
+                background-color: var(--ui-accent);
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+        }
+
+        &:hover,
+        &:focus-visible {
+            transform: translateX(0.35rem);
+
+            span::before {
+                transform: scaleX(1);
             }
         }
 
         &:focus-visible {
             outline: 2px solid rgba(247, 202, 24, 0.65);
             outline-offset: 4px;
-            border-radius: 12px;
+            border-radius: 6px;
+        }
+    }
+
+    .menu-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: auto;
+        padding-top: 2rem;
+    }
+
+    .menu-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.6rem;
+    }
+
+    .menu-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 1rem;
+        color: var(--menu-ink);
+        text-decoration: underline;
+        text-decoration-color: transparent;
+        text-underline-offset: 0.25em;
+        transition: text-decoration-color 0.25s ease;
+
+        svg {
+            width: 0.62rem;
+            height: 0.62rem;
         }
 
-        &:focus-visible span::before {
-            width: 100%;
+        &:hover,
+        &:focus-visible {
+            text-decoration-color: var(--ui-accent);
         }
+    }
 
-        @include bp.down(bp.$bp-tablet) {
-            font-size: 2.25rem;
-        }
+    .menu-copyright {
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        color: var(--menu-muted);
+    }
 
-        @include bp.down(bp.$bp-phone-compact) {
-            font-size: 2rem;
-        }
-
-        @include bp.up(bp.$bp-desktop) {
-            font-size: 3rem;
+    @media (prefers-reduced-motion: reduce) {
+        .menu-item,
+        .menu-item span::before {
+            transition: none;
         }
     }
 }
 
+// Trigger colours live in CSS, not React state: yellow when the drawer is
+// open, on real hover (pointer devices only, so taps don't stick) and on
+// keyboard focus. A mouse click or the programmatic focus restored after
+// closing doesn't match :focus-visible, so it goes back to white.
 .burger-trigger_shell {
     pointer-events: auto;
+    background-color: #efefef;
+    color: var(--ui-accent);
 
     > .magnetic-button--item {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         line-height: 0;
+    }
+}
+
+.button-2[aria-expanded="true"] .burger-trigger_shell,
+.button-2:focus-visible .burger-trigger_shell {
+    background-color: var(--ui-accent);
+    color: #efefef;
+}
+
+.button-2:focus-visible {
+    outline: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .button-2:hover .burger-trigger_shell {
+        background-color: var(--ui-accent);
+        color: #efefef;
     }
 }
