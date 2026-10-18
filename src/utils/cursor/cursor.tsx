@@ -7,7 +7,7 @@ import {
 
 type CursorMode =
   | "default"
-  | "github"
+  | "link"
   | "projects"
   | "certifications"
   | "link-black"
@@ -84,7 +84,9 @@ function Cursor({ isDataFetched }: { isDataFetched: boolean }) {
   }, [paintCursorPosition]);
 
   useEffect(() => {
-    const pointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const pointerQuery = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    );
     const legacyPointerQuery = pointerQuery as MediaQueryList & {
       addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
       removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
@@ -142,9 +144,9 @@ function Cursor({ isDataFetched }: { isDataFetched: boolean }) {
       const isProjectLink = !!target?.closest(
         '.projects_container_list_item:not(.loading), [data-cursor-project="true"]',
       );
-      const isGithubLink = !!target?.closest(
-        'a[href*="github.com"], [data-tooltip-content="Github"]',
-      );
+      // Any other link or button gets the same "link" cursor, so text links
+      // (footer, Path, menu, LinkedIn, CV…) behave alike.
+      const isLink = !!target?.closest("a[href], button");
 
       if (shouldForceDefaultCursor) {
         updateCursorMode("default");
@@ -164,8 +166,8 @@ function Cursor({ isDataFetched }: { isDataFetched: boolean }) {
         updateCursorMode("certifications");
       } else if (isProjectLink) {
         updateCursorMode("projects");
-      } else if (isGithubLink) {
-        updateCursorMode("github");
+      } else if (isLink) {
+        updateCursorMode("link");
       } else {
         updateCursorMode("default");
       }
@@ -195,7 +197,9 @@ function Cursor({ isDataFetched }: { isDataFetched: boolean }) {
 
   const baseCursorSize = 16;
   const ctaCursorSize = 24;
-  const githubCursorSize = 30;
+  // Text links get a see-through ring instead of a filled disc, so the
+  // link text stays readable under the cursor.
+  const linkCursorSize = 22;
   const certificationCursorSize = 24;
   const projectCursorSize = 40;
 
@@ -209,13 +213,13 @@ function Cursor({ isDataFetched }: { isDataFetched: boolean }) {
       ? projectCursorSize
       : cursorMode === "certifications"
         ? certificationCursorSize
-        : cursorMode === "github"
-          ? githubCursorSize
+        : cursorMode === "link"
+          ? linkCursorSize
           : isCtaCursor
             ? ctaCursorSize
             : baseCursorSize;
 
-  const isDirectionalCursor = cursorMode !== "default";
+  const isDirectionalCursor = cursorMode !== "default" && cursorMode !== "link";
   const cursorShellStyle: CSSProperties = {
     position: "fixed",
     top: 0,
@@ -236,13 +240,18 @@ function Cursor({ isDataFetched }: { isDataFetched: boolean }) {
     backgroundColor:
       cursorMode === "default"
         ? "#C0C0C0"
-        : cursorMode === "link-white"
-          ? "#EFEFEF"
-          : cursorMode === "link-black"
-            ? "#111111"
-            : "#F7CA18",
+        : cursorMode === "link"
+          ? "rgba(247, 202, 24, 0.12)"
+          : cursorMode === "link-white"
+            ? "#EFEFEF"
+            : cursorMode === "link-black"
+              ? "#111111"
+              : "#F7CA18",
     opacity: cursorMode === "default" ? 0.4 : 1,
-    border: "2px solid transparent",
+    border:
+      cursorMode === "link"
+        ? "1.5px solid rgba(247, 202, 24, 0.9)"
+        : "2px solid transparent",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -259,7 +268,7 @@ function Cursor({ isDataFetched }: { isDataFetched: boolean }) {
         ref={cursorShellRef}
       >
         <div
-          className={`cursor-circle ${cursorMode === "projects" ? "project-active" : ""} ${cursorMode === "github" ? "github-active" : ""} ${cursorMode === "certifications" ? "certifications-active" : ""} ${cursorMode === "link-black" ? "link-black-active" : ""} ${cursorMode === "link-white" ? "link-white-active" : ""} ${cursorMode === "link-yellow" ? "link-yellow-active" : ""}`}
+          className={`cursor-circle ${cursorMode === "projects" ? "project-active" : ""} ${cursorMode === "link" ? "link-active" : ""} ${cursorMode === "certifications" ? "certifications-active" : ""} ${cursorMode === "link-black" ? "link-black-active" : ""} ${cursorMode === "link-white" ? "link-white-active" : ""} ${cursorMode === "link-yellow" ? "link-yellow-active" : ""}`}
           style={cursorStyle}
         >
           <span

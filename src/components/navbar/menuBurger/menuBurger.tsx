@@ -217,6 +217,7 @@ function MenuBurger({
       <MagneticButton
         ref={triggerRef}
         className={`button-2 ${shouldShowBurger ? "visible" : "hidden"}`}
+        data-cursor-default="true"
         speed={0.3}
         scale={1.2}
         tolerance={0.6}
